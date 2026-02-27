@@ -2,18 +2,32 @@
 
 Herramienta en Java 17 para comparar dos carpetas y reportar diferencias.
 
-## Uso
+## Uso básico
 
 ```bash
 mvn -q exec:java -Dexec.mainClass=com.comparedirs.CompareDirsApplication -Dexec.args="carpetaA carpetaB --exclude .git,target"
 ```
 
-## Tipos de salida
+La salida por `stdout` es resumida (tipo de diferencia y ruta), sin comandos de sistema.
 
-- `CONTENT_MISMATCH`: muestra comando sugerido `diff "<archivo_en_A>" "<archivo_en_B>"`.
-- `ONLY_LEFT`: muestra comando sugerido `cp "<archivo_en_A>" "<archivo_en_B>"`.
-- `ONLY_RIGHT`: muestra comando sugerido `cp "<archivo_en_B>" "<archivo_en_A>"`.
+## Opciones
 
-## Exclusión de carpetas
+- `--exclude <dir1,dir2>`: excluye carpetas completas. Se puede repetir.
+- `--file <ruta>` o `-f <ruta>`: guarda el informe en fichero.
+- `--detail`: genera un informe detallado en el fichero de `--file`.
+  - Incluye comandos sugeridos (`diff` / `cp`).
+  - Para `CONTENT_MISMATCH`, intenta incluir también salida de `diff -u`.
 
-Puedes repetir `--exclude` múltiples veces y también pasar varios valores separados por coma.
+## Ejemplos
+
+Informe resumido por pantalla y en fichero:
+
+```bash
+mvn -q exec:java -Dexec.mainClass=com.comparedirs.CompareDirsApplication -Dexec.args="carpetaA carpetaB -f informe.txt"
+```
+
+Informe detallado en fichero:
+
+```bash
+mvn -q exec:java -Dexec.mainClass=com.comparedirs.CompareDirsApplication -Dexec.args="carpetaA carpetaB --exclude .git --file informe_detallado.txt --detail"
+```
